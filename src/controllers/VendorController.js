@@ -27,7 +27,7 @@ export const VendorLogin = async (req, res, next) => {
         email: existingUser.email,
         name: existingUser.name
       })
-      // console.log('VendorLogin signature ', signature)
+      console.log('VendorLogin signature ', signature)
       return res.json(signature);
     }
   }

@@ -128,7 +128,7 @@ export const CustomerLogin = async (req, res, next) => {
       })
       console.log('CustomerLogin signature ', signature)
 
-      return res.status(201).json({
+      return res.json({
         signature: signature,
         email: customer.email,
         verified: customer.verified
@@ -289,67 +289,86 @@ const validateTransaction = async(txnId) => {
 }
 
 
-// export const CreateOrder = async (req, res, next) => {
-//   const customer = req.user;
-//   const { txnId, amount, items } = req.body;
+export const CreateOrder = async (req, res, next) => {
+  const customer = req.user;
+  console.log('CreateOrder customer ', customer)
+  // const { txnId, amount, items } = req.body;
+  // console.log('CreateOrder req.body ', req.body)
+  // console.log('CreateOrder req.body.txnId ', req.body.txnId)
+  // console.log('CreateOrder req.body.amount ', req.body.amount)
+  // console.log('CreateOrder req.body.items ', req.body.items)
 
-//   if (customer) {
-//     const { status, currentTransaction } =  await validateTransaction(txnId);
+  if (customer) {
+    // const { status, currentTransaction } =  await validateTransaction(txnId);
 
-//     if (!status) {
-//       return res.status(404).json({ message: 'Error while Creating Order!'})
-//     }
+    // if (!status) {
+    //   return res.status(404).json({ message: 'Error while Creating Order!'})
+    // }
 
-//     const profile = await Customer.findById(customer._id);
-//     const orderId = `${Math.floor(Math.random() * 89999)+ 1000}`;
-//     const cart = req.body;
-//     let cartItems = Array();
-//     let netAmount = 0.0;
-//     let vendorId;
+    const profile = await Customer.findById(customer._id);
+    const orderId = `${Math.floor(Math.random() * 89999)+ 1000}`;
+    const cart = req.body;
+    let cartItems = Array();
+    let netAmount = 0.0;
+    let vendorId;
 
-//     const foods = await Food.find().where('_id').in(cart.map(item => item._id)).exec();
+    const foods = await Food
+      .find()
+      .where('_id')
+      .in(cart.map(item => item._id))
+      .exec();
 
-//     foods.map(food => {
-//       cart.map(({ _id, unit}) => {
-//         if (food._id == _id) {
-//           vendorId = food.vendorId;
-//           netAmount += (food.price * unit);
-//           cartItems.push({ food._id, unit})
-//         }
-//       })
-//     })
+    // let foodId = food._id
 
-//     if (cartItems) {
-//       const currentOrder = await Order.create({
-//         orderId: orderId,
-//         vendorId: vendorId,
-//         items: cartItems,
-//         totalAmount: netAmount,
-//         paidAmount: amount,
-//         orderDate: new Date(),
-//         orderStatus: 'Waiting',
-//         remarks: '',
-//         deliveryId: '',
-//         readyTime: 45
-//       })
+    foods.map(food => {
+      cart.map(({ _id, unit}) => {
+        if (food._id == _id) {
+          // vendorId = food.vendorId;
+          netAmount += (food.price * unit);
+          cartItems.push({ food, unit})
+        }
+      })
+    })
 
-//       profile.cart = [];
-//       profile.orders.push(currentOrder);
+    if (cartItems) {
+      const currentOrder = await Order.create({
+        orderId: orderId,
+        vendorId: vendorId,
+        items: cartItems,
+        totalAmount: netAmount,
+        // paidAmount: amount,
+        orderDate: new Date(),
+        paidThrough: 'COD',
+        orderStatus: 'Waiting',
+        // remarks: '',
+        // deliveryId: '',
+        // readyTime: 45
+      })
 
-//       currentTransaction.vendorId = vendorId;
-//       currentTransaction.orderId = orderId;
-//       currentTransaction.status = 'CONFIRMED'
+      if (currentOrder) {
+        profile.orders.push(currentOrder);
+        const profileResponse =  await profile.save();
+        // return res.status(200).json(profileResponse.orders);
+        return res.status(200).json(currentOrder);
+      }
+
+      // profile.cart = [];
+      // profile.orders.push(currentOrder);
+
+      // currentTransaction.vendorId = vendorId;
+      // currentTransaction.orderId = orderId;
+      // currentTransaction.status = 'CONFIRMED'
       
-//       await currentTransaction.save();
-//       await assignOrderForDelivery(currentOrder._id, vendorId);
+      // await currentTransaction.save();
+      // await assignOrderForDelivery(currentOrder._id, vendorId);
 
-//       const profileResponse =  await profile.save();
+      // const profileResponse =  await profile.save();
 
-//       return res.status(200).json(profileResponse);
-//     }
-//   }
-//   return res.status(400).json({ msg: 'Error while Creating Order'});
-// }
+      // return res.status(200).json(profileResponse);
+    }
+  }
+  return res.status(400).json({ msg: 'Error while Creating Order'});
+}
 
 export const GetOrders = async (req, res, next) => {
   const customer = req.user;
@@ -366,11 +385,15 @@ export const GetOrders = async (req, res, next) => {
 
 export const GetOrderById = async (req, res, next) => {
   const orderId = req.params.id;
+  console.log('CreateOrder req.params ', req.params)
+  console.log('CreateOrder req.params.id ', req.params.id)
   
   if (orderId) {
-    const order = await Customer.findById(orderId).populate("items.food");
-    
-    if(order){
+    console.log('CreateOrder orderId ', orderId)
+    const order = await Order.findById(orderId).populate("items.food");
+    console.log('CreateOrder order ', order)
+
+    if (order) {
       return res.status(200).json(order);
     }
   }

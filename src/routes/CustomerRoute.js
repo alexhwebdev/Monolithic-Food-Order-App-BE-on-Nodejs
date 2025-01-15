@@ -1,11 +1,11 @@
 import express from 'express';
 import { 
-  AddToCart, 
-  // CreateOrder, 
-  CreatePayment, CustomerLogin, 
-  CustomerSignUp, CustomerVerify, DeleteCart, EditCustomerProfile, 
-  GetCart, GetCustomerProfile, GetOrderById, GetOrders, RequestOtp, 
-  VerifyOffer } from '../controllers/CustomerController.js';
+  CustomerSignUp, CustomerLogin, CustomerVerify,
+  RequestOtp, GetCustomerProfile, EditCustomerProfile, 
+  AddToCart, GetCart, DeleteCart, 
+  VerifyOffer, CreatePayment, 
+  CreateOrder, GetOrders, GetOrderById, 
+ } from '../controllers/CustomerController.js';
 import { Authenticate } from '../middleware/CommonAuth.js';
 // import { Offer } from '../models/Offer';
 
@@ -28,7 +28,7 @@ router.get('/offer/verify/:id', VerifyOffer);
 
 router.post('/create-payment', CreatePayment);
 
-// router.post('/create-order', CreateOrder);
+router.post('/create-order', CreateOrder);
 router.get('/orders', GetOrders);
 router.get('/order/:id', GetOrderById)
 
