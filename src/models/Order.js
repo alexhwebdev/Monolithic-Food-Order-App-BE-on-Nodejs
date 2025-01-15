@@ -24,9 +24,13 @@ const OrderSchema = new Schema({
   totalAmount: {type: Number, require: true},
   paidAmount: {type: Number, require: true},
   orderDate: {type: Date },
+  paidThrough: {type: String},
+  paymentResponse: {type: String},
   orderStatus: {type: String},
   remarks: {type: String},
   deliveryId: {type: String},
+  appliedOffers: {type: Boolean},
+  offerId: {type: String},
   readyTime:{type: Number},
 },{
   toJSON: {

@@ -9,19 +9,19 @@ import ShoppingRoute from '../routes/ShoppingRoute.js';
 // import DeliveryRoute from '../routes/DeliveryRoute.js';
  
 
-const __filename = fileURLToPath(import.meta.url); // Get the current file path
-const __dirname = path.dirname(__filename); // Get the directory name from the file path
-// console.log('__filename ', __filename)
-// console.log('__dirname ', __dirname)
-
 export default async ( app ) => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true}))
 
   // app.use(bodyParser.json());
   // app.use(bodyParser.urlencoded({ extended: true }));
+
+  const __filename = fileURLToPath(import.meta.url); // Get the current file path
+  const __dirname = path.dirname(__filename); // Get the directory name from the file path
+  // console.log('__filename ', __filename)
+  // console.log('__dirname ', __dirname)
   
-  const imagePath = path.join(__dirname,'../images');
+  const imagePath = path.join(__dirname,'../images'); // Was "images" in SourceCode
   app.use('/images', express.static(imagePath));
 
   app.use('/images', express.static(imagePath));

@@ -1,12 +1,9 @@
 import express from 'express';
 // import { CreateFoodInput, CreateOfferInputs, EditVendorInput, VendorLoginInput } from '../dto'
 import Food from '../models/Food.js';
-// import { Offer } from '../models/Offer';
-// import { Order } from '../models/Order';
-import { 
-  GenerateSignature, 
-  ValidatePassword 
-} from '../utility/PasswordUtility.js';
+// import Offer from '../models/Offer.js';
+import Order from '../models/Order.js';
+import { GenerateSignature, ValidatePassword } from '../utility/PasswordUtility.js';
 import { FindVendor } from './AdminController.js';
 
 
@@ -34,7 +31,6 @@ export const VendorLogin = async (req, res, next) => {
   return res.json({'message': 'Login credential is not valid'})
 }
 
-// NOT USED
 export const GetVendorProfile = async (req, res, next) => {
   const user = req.user;
   console.log('GetVendorProfile user ', user)
@@ -151,56 +147,68 @@ export const GetFoods = async (req, res, next) => {
   return res.json({'message': 'Foods not found!'})
 }
 
-// export const GetCurrentOrders = async (req, res, next) => {
-//   const user = req.user;
+export const GetCurrentOrders = async (req, res, next) => {
+  const user = req.user;
+  console.log('GetCurrentOrders user', user)
   
-//   if(user){
-//     const orders = await Order.find({ vendorId: user._id}).populate('items.food');
+  if (user) {
+    const orders = await Order
+      .find({ vendorId: user._id})
+      .populate('items.food');
+    console.log('GetCurrentOrders orders', orders)
 
-//     if(orders != null){
-//       return res.status(200).json(orders);
-//     }
-//   }
+    if (orders != null) {
+      return res.status(200).json(orders);
+    }
+  }
+  return res.json({ message: 'Orders Not found'});
+}
 
-//   return res.json({ message: 'Orders Not found'});
-// }
-
-// export const GetOrderDetails = async (req, res, next) => {
-//   const orderId = req.params.id;
+export const GetOrderDetails = async (req, res, next) => {
+  const orderId = req.params.id;
+  console.log('GetOrderDetails orderId', orderId)
   
-//   if(orderId){
-//     const order = await Order.findById(orderId).populate('items.food');
+  if (orderId) {
+    const order = await Order
+      .findById(orderId)
+      .populate('items.food');
+    console.log('GetOrderDetails order', order)
 
-//     if(order != null){
-//       return res.status(200).json(order);
-//     }
-//   }
+    if (order != null) {
+      return res.status(200).json(order);
+    }
+  }
+  return res.json({ message: 'Order Not found'});
+}
 
-//   return res.json({ message: 'Order Not found'});
-// }
-
-// export const ProcessOrder = async (req, res, next) => {
-//   const orderId = req.params.id;
-//   const { status, remarks, time } = req.body;
+export const ProcessOrder = async (req, res, next) => {
+  const orderId = req.params.id;
+  console.log('ProcessOrder orderId', orderId)
+  const { status, remarks, time } = req.body;
+  console.log('ProcessOrder status', status)
+  console.log('ProcessOrder remarks', remarks)
+  console.log('ProcessOrder time', time)
   
-//   if(orderId){
-//     const order = await Order.findById(orderId).populate('food');
-//     order.orderStatus = status;
-//     order.remarks = remarks;
+  if (orderId) {
+    const order = await Order
+      .findById(orderId)
+      .populate('items.food');
+    console.log('ProcessOrder order', order)
+    order.orderStatus = status;
+    order.remarks = remarks;
 
-//     if(time){
-//       order.readyTime = time;
-//     }
+    if (time) {
+      order.readyTime = time;
+    }
 
-//     const orderResult = await order.save();
-
-//     if(orderResult != null){
-//       return res.status(200).json(orderResult);
-//     }
-//   }
-
-//   return res.json({ message: 'Unable to process order'});
-// }
+    const orderResult = await order.save();
+    console.log('ProcessOrder orderResult', orderResult)
+    if (orderResult != null) {
+      return res.status(200).json(orderResult);
+    }
+  }
+  return res.json({ message: 'Unable to process order'});
+}
 
 // export const GetOffers = async (req, res, next) => {
 //   const user = req.user;

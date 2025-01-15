@@ -323,7 +323,7 @@ export const CreateOrder = async (req, res, next) => {
     foods.map(food => {
       cart.map(({ _id, unit}) => {
         if (food._id == _id) {
-          // vendorId = food.vendorId;
+          vendorId = food.vendorId;
           netAmount += (food.price * unit);
           cartItems.push({ food, unit})
         }
@@ -339,18 +339,22 @@ export const CreateOrder = async (req, res, next) => {
         // paidAmount: amount,
         orderDate: new Date(),
         paidThrough: 'COD',
+        paymentResponse: "Some json response stringify",
         orderStatus: 'Waiting',
-        // remarks: '',
-        // deliveryId: '',
-        // readyTime: 45
+        remarks: '',
+        deliveryId: '',
+        appliedOffers: false,
+        offerId: null,
+        readyTime: 45
       })
 
-      if (currentOrder) {
-        profile.orders.push(currentOrder);
-        const profileResponse =  await profile.save();
-        // return res.status(200).json(profileResponse.orders);
-        return res.status(200).json(currentOrder);
-      }
+      // if (currentOrder) {
+      profile.cart = [];
+      profile.orders.push(currentOrder);
+      const profileSaveResponse =  await profile.save();
+      // return res.status(200).json(profileSaveResponse.orders);
+      return res.status(200).json(profileSaveResponse);
+      // }
 
       // profile.cart = [];
       // profile.orders.push(currentOrder);
@@ -362,12 +366,14 @@ export const CreateOrder = async (req, res, next) => {
       // await currentTransaction.save();
       // await assignOrderForDelivery(currentOrder._id, vendorId);
 
-      // const profileResponse =  await profile.save();
+      // const profileSaveResponse =  await profile.save();
 
-      // return res.status(200).json(profileResponse);
+      // return res.status(200).json(profileSaveResponse);
+    } else {
+      return res.status(400).json({message: 'Unable to create Order!'});
     }
   }
-  return res.status(400).json({ msg: 'Error while Creating Order'});
+  // return res.status(400).json({ msg: 'Error while Creating Order'});
 }
 
 export const GetOrders = async (req, res, next) => {
@@ -403,6 +409,8 @@ export const GetOrderById = async (req, res, next) => {
 /* ------------------- Cart Section --------------------- */
 export const AddToCart = async (req, res, next) => {
   const customer = req.user;
+  console.log('AddToCart customer ', customer)
+  console.log('AddToCart req.body ', req.body)
   
   if (customer) {
     const profile = await Customer.findById(customer._id);
@@ -410,29 +418,35 @@ export const AddToCart = async (req, res, next) => {
 
     const { _id, unit } = req.body;
     const food = await Food.findById(_id);
+    console.log('AddToCart profile ', profile)
+    console.log('AddToCart food ', food)
 
     if (food) {
       if (profile != null) {
         cartItems = profile.cart;
+        console.log('AddToCart cartItems 1 ', cartItems)
 
-        if(cartItems.length > 0){
+        if (cartItems.length > 0) {
           // check and update
-          let existFoodItems = cartItems.filter((item) => item.food._id.toString() === _id);
+          let existFoodItems = cartItems.filter(
+            (item) => item.food._id.toString() === _id
+          );
+          console.log('AddToCart existFoodItems ', existFoodItems)
           
           if (existFoodItems.length > 0) {
-              
             const index = cartItems.indexOf(existFoodItems[0]);
+            console.log('AddToCart index ', index)
             
             if (unit > 0) {
               cartItems[index] = { food, unit };
             } else {
               cartItems.splice(index, 1);
             }
-
           } else{ 
             cartItems.push({ food, unit})
           }
         } else {
+          console.log('AddToCart cartItems 2 ', cartItems)
           // add new Item
           cartItems.push({ food, unit });
         }
@@ -465,7 +479,10 @@ export const DeleteCart = async (req, res, next) => {
   const customer = req.user;
 
   if (customer) {
-    const profile = await Customer.findById(customer._id).populate('cart.food').exec();
+    const profile = await Customer
+      .findById(customer._id)
+      .populate('cart.food')
+      .exec();
 
     if (profile != null) {
       profile.cart = [];

@@ -1,18 +1,11 @@
 import express from 'express';
 import { 
-  VendorLogin,
-  GetVendorProfile,
-  UpdateVendorProfile, 
-  UpdateVendorService,
-  AddFood,
-  GetFoods,
+  VendorLogin, GetVendorProfile, UpdateVendorProfile, UpdateVendorService,
+  AddFood, GetFoods,
   UpdateVendorCoverImage,
-  // AddOffer, 
-  // ditOffer,  
-  // GetOffers, 
-  // GetOrderDetails, 
-  // GetOrders, 
-  // ProcessOrder,  
+  GetCurrentOrders, ProcessOrder, GetOrderDetails
+  // GetOffers, AddOffer, EditOffer,  
+
 } from '../controllers/VendorController.js';
 import { Authenticate } from '../middleware/CommonAuth.js';
 import multer from 'multer';
@@ -52,9 +45,10 @@ router.get('/foods', GetFoods);
 
 router.patch('/coverimage', images, UpdateVendorCoverImage);
 
-// router.get('/orders', GetOrders);
-// router.put('/order/:id/process', ProcessOrder);
-// router.get('/order/:id', GetOrderDetails)
+router.get('/orders', GetCurrentOrders);
+router.get('/order/:id', GetOrderDetails)
+router.put('/order/:id/process', ProcessOrder);
+
 
 // //Offers
 // router.get('/offers', GetOffers);
