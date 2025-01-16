@@ -1,12 +1,9 @@
 import express from 'express';
 import { 
-  CreateVendor, 
-  GetDeliveryUsers, 
-  GetTransactionById, 
-  GetTransactions, 
-  GetVendorByID, 
-  GetVendors, 
-  VerifyDeliveryUser 
+  CreateVendor, GetVendors, GetVendorByID, 
+  GetTransactions, GetTransactionById, 
+  VerifyDeliveryUser,
+  GetDeliveryUsers
 } from '../controllers/AdminController.js';
 
 const router = express.Router();

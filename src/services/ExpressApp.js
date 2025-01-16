@@ -6,7 +6,7 @@ import AdminRoute from '../routes/AdminRoute.js'
 import VendorRoute from '../routes/VendorRoute.js'
 import CustomerRoute from '../routes/CustomerRoute.js';
 import ShoppingRoute from '../routes/ShoppingRoute.js';
-// import DeliveryRoute from '../routes/DeliveryRoute.js';
+import DeliveryRoute from '../routes/DeliveryRoute.js';
  
 
 export default async ( app ) => {
@@ -28,7 +28,7 @@ export default async ( app ) => {
   app.use('/admin', AdminRoute);
   app.use('/vendor', VendorRoute)
   app.use('/customer', CustomerRoute)
-  // app.use('/delivery', DeliveryRoute);
+  app.use('/delivery', DeliveryRoute);
   app.use(ShoppingRoute);
 
   return app;

@@ -24,13 +24,12 @@ router.post('/cart', AddToCart)
 router.get('/cart', GetCart)
 router.delete('/cart', DeleteCart)
 
-router.get('/offer/verify/:id', VerifyOffer);
-
-router.post('/create-payment', CreatePayment);
-
 router.post('/create-order', CreateOrder);
 router.get('/orders', GetOrders);
 router.get('/order/:id', GetOrderById)
+
+router.get('/offer/verify/:id', VerifyOffer);
+router.post('/create-payment', CreatePayment);
 
 // export { router as CustomerRoute}
 export default router;

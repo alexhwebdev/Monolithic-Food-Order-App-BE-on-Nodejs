@@ -1,8 +1,8 @@
 import express from 'express';
 // import { CreateVendorInput } from '../dto';
-// import DeliveryUser from '../models/Vendor.js';
+import DeliveryUser from '../models/Vendor.js';
 import Vendor from '../models/Vendor.js';
-// import { Transaction } from '../models/Transaction';
+import Transaction from '../models/Transaction.js';
 import { 
   GeneratePassword, 
   GenerateSalt 
@@ -74,49 +74,45 @@ export const GetVendorByID = async (req, res, next) => {
 }
 
 export const GetTransactions = async (req, res, next) => {
-//   const transactions = await Transaction.find();
+  const transactions = await Transaction.find();
 
-//   if(transactions){
-//     return res.status(200).json(transactions)
-//   }
-
-//   return res.json({"message": "Transactions data not available"})
+  if (transactions) {
+    return res.status(200).json(transactions)
+  }
+  return res.json({"message": "Transactions data not available"})
 }
 
 export const GetTransactionById = async (req, res, next) => {
-//   const id = req.params.id;
-//   const transaction = await Transaction.findById(id);
+  const id = req.params.id;
+  const transaction = await Transaction.findById(id);
 
-//   if(transaction){
-//     return res.status(200).json(transaction)
-//   }
-
-//   return res.json({"message": "Transaction data not available"})
+  if (transaction) {
+    return res.status(200).json(transaction)
+  }
+  return res.json({"message": "Transaction data not available"})
 }
 
 export const VerifyDeliveryUser = async (req, res, next) => {
-//   const { _id, status } = req.body;
+  const { _id, status } = req.body;
 
-//   if (_id) {
-//     const profile = await DeliveryUser.findById(_id);
+  if (_id) {
+    const profile = await DeliveryUser.findById(_id);
 
-//     if (profile) {
-//       profile.verified = status;
-//       const result = await profile.save();
+    if (profile) {
+      profile.verified = status;
+      const result = await profile.save();
 
-//       return res.status(200).json(result);
-//     }
-//   }
-
-//   return res.json({ message: 'Unable to verify Delivery User'});
+      return res.status(200).json(result);
+    }
+  }
+  return res.json({ message: 'Unable to verify Delivery User'});
 }
 
 export const GetDeliveryUsers = async (req, res, next) => {
-//   const deliveryUsers = await DeliveryUser.find();
+  const deliveryUsers = await DeliveryUser.find();
 
-//   if (deliveryUsers) {
-//     return res.status(200).json(deliveryUsers);
-//   }
-  
-//   return res.json({ message: 'Unable to get Delivery Users'});
+  if (deliveryUsers) {
+    return res.status(200).json(deliveryUsers);
+  }
+  return res.json({ message: 'Unable to get Delivery Users'});
 }

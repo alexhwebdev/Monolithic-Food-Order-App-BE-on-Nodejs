@@ -88,8 +88,10 @@ export const GetAvailableOffers = async (req, res, next) => {
     pincode: pincode, 
     isActive: true
   });
+  console.log('GetAvailableOffers pincode ', pincode)
+  console.log('GetAvailableOffers offers ', offers)
 
-  if(offers){
+  if (offers) {
     return res.status(200).json(offers);
   }
   return res.json({ message: 'Offers not Found!'});

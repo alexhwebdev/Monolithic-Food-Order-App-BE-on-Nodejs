@@ -12,7 +12,7 @@ import { ValidateSignature } from '../utility/PasswordUtility.js';
 
 export const Authenticate = async (req, res, next) => {
   const signature = await ValidateSignature(req);
-  
+
   if (signature) {
     console.log('Authentication successful!')
     return next()

@@ -1,10 +1,10 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import {
-    DeliveryLogin,
-    DeliverySignUp, EditDeliveryProfile, GetDeliveryProfile, UpdateDeliveryUserStatus
-} from '../controllers';
-import { Authenticate } from '../middleware';
-import { Offer } from '../models/Offer';
+  DeliverySignUp, DeliveryLogin,
+  UpdateDeliveryUserStatus, EditDeliveryProfile, GetDeliveryProfile
+} from '../controllers/DeliveryController.js';
+import { Authenticate } from '../middleware/CommonAuth.js';
+import Offer from '../models/Offer.js';
 
 const router = express.Router();
 
@@ -14,7 +14,6 @@ router.use(Authenticate);
 router.put('/change-status', UpdateDeliveryUserStatus);
 router.get('/profile', GetDeliveryProfile)
 router.patch('/profile', EditDeliveryProfile)
-
 
 // export { router as DeliveryRoute}
 export default router;
