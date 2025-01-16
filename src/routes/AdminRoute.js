@@ -13,8 +13,8 @@ router.get('/vendors', GetVendors)
 router.get('/vendor/:id', GetVendorByID)
 router.get('/transactions', GetTransactions)
 router.get('/transaction/:id', GetTransactionById)
-router.put('/delivery/verify', VerifyDeliveryUser)
 router.get('/delivery/users', GetDeliveryUsers);
+router.put('/delivery/verify', VerifyDeliveryUser)
 
 router.get('/', (req, res, next) => {
   res.json({ message: "Hello from AdminRoute"})
